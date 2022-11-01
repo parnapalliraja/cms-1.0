@@ -1,4 +1,4 @@
-/*const mongoose = require('mongoose')
+const mongoose = require('mongoose')
 const assert = require('assert')
 
 const connectDB = () =>{
@@ -8,4 +8,4 @@ const connectDB = () =>{
     })
 }
 
-module.exports = connectDB */
+module.exports = connectDB 

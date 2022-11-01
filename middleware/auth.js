@@ -1,41 +1,26 @@
- const {StatusCodes} = require('http-status-codes')
-const authController = {
-    register: async (req,res) =>{
-        
-        try{
-             res.json({msg: "register"})
-        }catch(err){
-            return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
-        }
-    },
-    login: async (req,res) =>{
-        try{
-             res.json({msg: "login"})
-        }catch(err){
-            return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
-        }
-    },
-    logout: async (req,res) =>{
-  try{
-             res.json({msg: "logout"})
-        }catch(err){
-            return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
-        }
-    },
-    refereshToken: async (req,res) =>{
-  try{
-             res.json({msg: "refreshToken"})
-        }catch(err){
-            return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
-        }
-    },
-    resetPassword: async (req,res) =>{
-  try{
-             res.json({msg: "resetPassword"})
-        }catch(err){
-            return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
-        }
-    },
+const { StatusCodes } = require('http-status-codes')
+const jwt = require('jsonwebtoken')
 
+// logic to logged read user id
+const auth = async (req, res, next) => {
+    try {
+        const token = req.header('Authorization')
+
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
+            if (err)
+                return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Token not valid"})
+
+                //res.json({ id: user.id })
+
+            req.user = user
+            next() //forwarding response to next controller
+        })
+
+        
+
+    } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message})
+    }
 }
-module.exports = authController
+
+module.exports = auth
