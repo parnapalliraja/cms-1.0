@@ -4,6 +4,9 @@ const bcrypt = require('bcryptjs')
 const { createAccessToken } = require('../util/token')
 const jwt = require('jsonwebtoken')
 
+const regTemplate = require('../template/regTemplate') //import regtemplate
+const sendMail = require('../middleware/mail')
+
 const authController = {
     register: async (req, res) => {
         
@@ -19,6 +22,11 @@ const authController = {
                 password: encPassword
             }) 
             //res.json({data: newUser})
+            const template = regTemplate(name,email)
+            const subject = `confirmation of registeration with CMS-v1.0`;
+            
+            await sendMail(email,subject,template)
+
            res.status(StatusCodes.OK).json({ msg: "user registered successfully", data: newUser })
         }
         catch(err){
@@ -59,7 +67,7 @@ const authController = {
             res.clearCookie('refreshToken', { path: `/api/v1/auth/refreshToken`})
              res.json({msg: "logout"})
         }catch(err){
-            return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         }
     },
     refereshToken: async (req,res) =>{
@@ -97,7 +105,7 @@ const authController = {
         const output =  await User.findByIdAndUpdate({ _id: id}, { password: passwordHash })
          res.json({ msg: "password reset success", output})
         }catch(err){
-            return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         }
     },
 

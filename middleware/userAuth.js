@@ -3,15 +3,15 @@ const User = require('../model/userModel')
 
 
 
-const adminAuth = async (req, res, next) => {
+const userAuth = async (req, res, next) => {
     try {
-       // res.json({ adminAuth: req.user })
+       // res.json({ userAuth: req.user })
        const id = req.user.id
        const extUser = await User.findById({ _id: id})
 
        //validate role
-       if(extUser.role !== "superadmin")
-        return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Access denied for non-admin users..."})
+       if(extUser.role === "superadmin")
+            return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Update resricted for Admin..."})
 
         next()
     } catch (err) {
@@ -19,4 +19,4 @@ const adminAuth = async (req, res, next) => {
     }
 }
 
-module.exports = adminAuth
+module.exports = userAuth

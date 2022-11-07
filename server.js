@@ -6,6 +6,7 @@ const assert = require('assert')
 const fileUpload = require('express-fileupload');
 const connectDB = require('./db/index')
 const {StatusCodes} = require('http-status-codes')
+const path = require('path')
 
 
 //port
@@ -34,12 +35,27 @@ app.use(
 
 const authRoute = require('./route/authRoute');
 const userRoute = require('./route/userRoute');
+const imageRoute = require('./route/imageRoute')
+const mailRoute = require('./route/mailRoute')
 
 //primary route
 
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/user', userRoute)
+app.use('/api/v1/image', imageRoute)
+app.use('/api/v1/mail', mailRoute)
 
+//default path
+app.all('*', (req,res)=>{
+     res.status(StatusCodes.NOT_FOUND).json({ msg: "The Requested route path is not found"})
+})
+
+if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging'){
+    app.use(express.static(`client/build`))
+    app.get(`*`, (req,res)=>{
+        res.sendFile(path.join(__dirname + `/client/build/index.html`))
+    })
+}
 
 const start = async () => {
     try {
@@ -49,7 +65,7 @@ const start = async () => {
         })
 
     }catch(err) {
-        return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         
     }
 

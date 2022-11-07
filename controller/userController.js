@@ -1,44 +1,59 @@
-const { statusCodes } = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const User = require('../model/userModel')
 
 const userController = {
     getAll : async (req,res) =>{ 
        try{
-        const users = await User.find({})
-        res.json({users, length: users.length})
+        const users = await User.find({}).select('-password')
+        const filteredUsers = users.filter((item)=> item.role !== "superadmin")
+
+        res.json({ users: filteredUsers, length: filteredUsers.length })
        }catch(err){
-        return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
        }
     },
 
     getCurrentUser : async (req,res) => {
+
         try{
-            res.json({msg: "get login user info"})
+            const id = req.user.id
+            const user = await User.findById({ _id: id})
+            res.json({ user })
         }catch(err){
-            return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         }
      },
 
     updateUser: async (req,res) => { 
         try{
-            res.json({msg: "update user info"})
+            const {name, mobile, image } = req.body
+            await User.findByIdAndUpdate({_id: req.user.id}, {name, mobile, image})
+            res.status(StatusCodes.OK).json({msg: "user data successfully updated"})
+
         }catch(err){
-            return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         }
     },
 
     deleteUser: async (req,res) => {
         try{
-            res.json({msg: "delete user"})
+            const id = req.params.id
+            await User.findByIdAndDelete({_id: id})
+            res.json({msg: "deleted user successfully"})
         }catch(err){
-            return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         }
      },
      changeRole: async (req,res) => {
+
         try{
-            res.json({msg: "change user role"})
+            const id = req.params.id
+            const { role } = req.body
+            
+            await User.findByIdAndUpdate({_id: id}, { role })
+            res.json({msg: "role updated successfully"})
         }catch(err){
-            return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         }
              },
 
