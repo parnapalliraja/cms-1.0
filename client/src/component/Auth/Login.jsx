@@ -30,7 +30,7 @@ const submitHandler = async (e)=>{
             console.log('after register = ', res.data);
             localStorage.setItem("loginToken", res.data.accessToken)
             toast.success(res.data.msg);
-            navigate('/')
+           // navigate('/')
             window.location.href = "/"
         }).catch(err => toast.error(err.data.response.msg))
     } catch(err){
