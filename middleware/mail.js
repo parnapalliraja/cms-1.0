@@ -11,7 +11,7 @@ const sendMail = async (to , subject, content) =>{
                 pass: process.env.MAIL_PASSWORD,
             }
         });
-
+        // sendMail is inbuilt method
         let info = await transporter.sendMail({
             from: process.env.MAIL_ID,
             to,

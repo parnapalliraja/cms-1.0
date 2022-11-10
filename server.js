@@ -57,6 +57,7 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging'){
     })
 }
 
+
 const start = async () => {
     try {
        await connectDB()
