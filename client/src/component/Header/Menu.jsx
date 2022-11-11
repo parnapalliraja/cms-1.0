@@ -41,17 +41,7 @@ function Menu() {
                         Account
                     </NavLink>
                     <ul className='dropdown-menu'>
-                        <li>
-                            {
-                                isAdmin ? <NavLink to={`/admin/profile`} className="dropdown-item" >Profile</NavLink> :null
-                            }
-                            {
-                                isStudent ? <NavLink to={`/student/profile`} className="dropdown-item" >Profile</NavLink> :null
-                            }
-                            {
-                                isTrainer ? <NavLink to={`/trainer/profile`} className="dropdown-item" >Profile</NavLink> :null
-                            }
-                        </li>
+                        
                         <li>
                             {
                                 isAdmin ? <NavLink to={`/admin/dashboard`} className="dropdown-item" >Dashboard</NavLink> :null
@@ -63,9 +53,20 @@ function Menu() {
                                 isTrainer ? <NavLink to={`/trainer/dashboard`} className="dropdown-item" >Dashboard</NavLink> :null
                             }
                         </li>
+                        <li>
+                            {
+                                isAdmin ? <NavLink to={`/admin/profile`} className="dropdown-item" >Profile</NavLink> :null
+                            }
+                            {
+                                isStudent ? <NavLink to={`/student/profile`} className="dropdown-item" >Profile</NavLink> :null
+                            }
+                            {
+                                isTrainer ? <NavLink to={`/trainer/profile`} className="dropdown-item" >Profile</NavLink> :null
+                            }
+                        </li>
                         <li className='dropdown-divider'></li>
                         <li>
-                            <Navlink to={`/`} onClick={logoutUser} className="dropdown-item text-danger">Logout</Navlink>
+                            <NavLink to={`/`} onClick={logoutUser} className="dropdown-item btn btn-danger">Logout</NavLink>
                         </li>
                     </ul>
                 </li>
@@ -84,8 +85,8 @@ function Menu() {
                     isLogged ? (
                         <React.Fragment>
                             { isAdmin ? "Admin-CMS-v1.0" : null }
-                { isStudent ? "Student-CMS-v1.0" :  null }
-                { isTrainer ? "Trainer-CMS-v1.0" :  null }
+                            { isStudent ? "Student-CMS-v1.0" :  null }
+                            { isTrainer ? "Trainer-CMS-v1.0" :  null }
                         </React.Fragment>
                     ) : "CMS-V1.0"
                 }      
@@ -95,7 +96,7 @@ function Menu() {
                 <span className="navbar-toggler-icon"></span>
             </button>
 
-            <div className='collapse navbar-collapse justify-content-between' id='menu'>
+            <div className={isLogged ? "collapse navbar-collapse justify-content-end" : "collapse navbar-collapse justify-content-between"} id='menu'>
                 {
                     isLogged ? null : (
                      <nav className='navbar-nav bg-danger'>
