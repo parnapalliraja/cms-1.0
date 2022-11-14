@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import { toast } from 'react-toastify';
 import axios from 'axios'
 import {useNavigate}  from 'react-router-dom'
+import { omit } from "lodash"
 
 
 
@@ -12,10 +13,47 @@ function Login() {
     password: ""
 })
 
-const navigate = useNavigate()
+const [errors, setErrors] = useState({})
+
+    const navigate = useNavigate()
+
+    //error logic
+    const errPrint = (prop ,msg) => {
+        setErrors({...errors, [prop] :msg})
+    }
+
+    const validate = (event,name,value)=>{
+        switch(name) {
+            
+            case "email" :
+                if(value.length === 0){
+                    errPrint(name , "Email field must be filled")
+                }else if (!new RegExp (/^[-a-z A-Z 0-9 \S]+@[a-z \s]+\.[c][o][m]+$/).test(value)){
+                    errPrint(name , "Invalid email format")
+                }else{
+                    let newObj = omit (errors , name)
+                    setErrors(newObj)
+                }
+                break;
+                
+                case "password" : 
+                if(value.length === 0){
+                    errPrint(name , "password field must be filled")
+                }else if(value.length<8 || value.length>20){
+                    errPrint(name , "password should have greaterthan 8 char and lessthan 20 char")
+                }else{
+                    let newObj = omit(errors , name);
+                    setErrors(newObj)
+                } break;
+
+                default: break;
+            }
+    }
 
 const readValue = (e)=>{
     const { name, value} = e.target;
+    validate(e,name,value)
+    //console.log(errors)
     setUser({...user, [name] :value})
 }
 
@@ -54,11 +92,21 @@ return (
                             <div className="form-group mt-2">
                                 <label htmlFor='email'>Email</label>
                                 <input type='text' name='email' id='email' value={user.email} onChange={readValue} className='form-control' required />
+                                {
+                                        errors && errors.email  ? (
+                                            <div className="alert alert-danger" style={{padding:"8px"}}> {errors.email}</div>
+                                        ) : null
+                                    }
                             </div>
 
                             <div className="form-group mt-2">
                                 <label htmlFor='password'>Password</label>
                                 <input type='text' name='password' id='password' value={user.password} onChange={readValue} className='form-control' required />
+                                {
+                                        errors && errors.password  ? (
+                                            <div className="alert alert-danger" style={{padding:"8px"}}> {errors.password}</div>
+                                        ) : null
+                                    }
                             </div>
 
                             

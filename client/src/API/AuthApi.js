@@ -3,7 +3,7 @@ import axios from 'axios'
 
 
 function AuthApi(token) {
-  console.log(token)
+  //console.log(token)
     //current user
     const [currentUser, setCurrentUser] = useState(null)
 
@@ -25,7 +25,7 @@ function AuthApi(token) {
               Authorization: token }
           });
     
-          console.log('current user = ',out.data.user.role)
+          //console.log('current user = ',out.data.user)
           setCurrentUser(out.data.user)
           setIsLogged(true)
             if(out.data.user.role === "superadmin"){

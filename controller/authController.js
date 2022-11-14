@@ -91,7 +91,7 @@ const authController = {
         //res.json({ rf })
         // res.json({msg: "refreshToken"})
         }catch(err){
-            return res.status(StatusCodes.INTERNAL_SERVAL_ERROR).json({msg: err.message})
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         }
     },
 
