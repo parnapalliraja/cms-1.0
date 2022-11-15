@@ -64,7 +64,7 @@ const submitHandler = async (e)=>{
         console.log("user = ",user)
         await axios.post(`/api/v1/auth/login`, user)
         .then(res => {
-            console.log('after register = ', res.data);
+            //console.log('after register = ', res.data);
             localStorage.setItem("loginToken", res.data.accessToken)
             toast.success(res.data.msg);
            // navigate('/')

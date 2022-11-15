@@ -39,7 +39,7 @@ const userController = {
         try{
             const id = req.params.id
             await User.findByIdAndDelete({_id: id})
-            res.json({msg: "deleted user successfully"})
+            res.json({msg: " user deleted successfully"})
         }catch(err){
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: err.message})
         }
