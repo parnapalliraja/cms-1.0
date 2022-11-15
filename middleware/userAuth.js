@@ -10,7 +10,7 @@ const userAuth = async (req, res, next) => {
        const extUser = await User.findById({ _id: id})
 
        //validate role
-       if(!extUser.role === "superadmin")
+       if(extUser.role === "superadmin")
             return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Update resricted for Admin..."})
 
         next()

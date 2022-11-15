@@ -59,8 +59,8 @@ function Register() {
                 case "password" : 
                 if(value.length === 0){
                     errPrint(name , "password field must be filled")
-                }else if(value.length>8 && value.length<20){
-                    errPrint(name , "password should have greaterthan 8 char and lessthan 20 char")
+                }else if(value.length<8 && value.length>16){
+                    errPrint(name , "password should have greaterthan 8 char and lessthan 16 char")
                 }else{
                     let newObj = omit(errors , name);
                     setErrors(newObj)
@@ -78,10 +78,10 @@ function Register() {
         e.preventDefault();
         try{
 
-            console.log("user = ",user)
+           // console.log("user = ",user)
             await axios.post(`/api/v1/auth/register`, user)
             .then(res => {
-                console.log('after register = ', res.data);
+              //  console.log('after register = ', res.data);
                 toast.success("user registered successfully");
                 navigate('/login')
             }).catch(err => toast.error(err.message))

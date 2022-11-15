@@ -19,7 +19,11 @@ const [currentUser] = context.data.authApi.currentUser
 const [img, setImg] = useState(false)
 const [loading, setLoading] = useState(false)
 
-const [user, setUser] = useState({})
+const [user, setUser] = useState({
+  name: "",
+  email: "",
+  mobile: ""
+})
 const [isEdit, setIsEdit] = useState(false)
 
 const readValue = (e) =>{
@@ -27,10 +31,38 @@ const readValue = (e) =>{
   setUser({...user, [name]: value})
 }
 
+const toggleEdit = ()=>{
+  setIsEdit((prevState)=> !prevState)
+}
+
 useEffect(()=>{
   setImg(currentUser.image)
+  setUser(currentUser)
 },[img,currentUser])
 
+const updateHandler = async (e)=>{
+  e.preventDefault()
+  try {
+    const updateUser = {
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile
+    }
+    console.log("update user", updateUser)
+
+    //update db file
+    await axios.patch(`/api/v1/user/update`, updateUser,{
+      headers: {
+        Authorization: token
+      }
+    })
+    toast.success("Profile data updated successfully")
+    window.location.href = "/student/profile"
+
+  } catch (err) {
+    toast.error(err.data.response.msg)
+  }
+}
 const handleUpload = async (e)=>{
   e.preventDefault();
   try {
@@ -144,8 +176,39 @@ const submitHandler = async (e)=>{
                     </div>
                 </div>
                 <div className='col-md-8'>
-                  <div className='card-body'>
-                    <h4 className='card-title text-center text-uppercase text-success'>{currentUser.name}</h4>
+                  {
+                    isEdit ? (<div className='card-body'>
+                      <div className='d-flex justify-content-between'>
+                        <h4 className='card-title text-center text-uppercase text-success'>{currentUser.name}</h4>
+                        <button onClick={toggleEdit} className='btn btn-danger'><i className='bi bi-x-circle'></i></button>
+                      </div>
+                      <hr/>
+
+                      <form autoComplete='off' onSubmit={updateHandler}>
+                        <div className='form-control mt-2'>
+                          <label htmlFor='name'>Name</label>
+                          <input type="text" id='name' name='name' value={user.name} onChange={readValue} className='form-control' required/>
+                        </div>
+                        <div className='form-control mt-2'>
+                          <label htmlFor='email'>Email</label>
+                          <input type="email" id='email' name='email'value={user.email} onChange={readValue} className='form-control' required />
+                        </div>
+                        <div className='form-control mt-2'>
+                          <label htmlFor='mobile'>Mobile</label>
+                          <input type="number" id='mobile' name='mobile' value={user.mobile} onChange={readValue} className='form-control' required/>
+                        </div>
+                        <div className='form-control mt-2'>
+                          <input type='submit' value='Update' className='btn btn-warning' />
+                        </div>
+                      </form>
+                      
+                    </div>) :
+                    (<div className='card-body'>
+
+                      <div className='d-flex justify-content-between'>
+                        <h4 className='card-title text-center text-uppercase text-success'>{currentUser.name}</h4>
+                        <button onClick={toggleEdit} className='btn btn-info'><i className='bi bi-pen'></i></button>
+                      </div>
                     <hr/>
                     <p className='card-text'>
                       <strong>Email</strong>
@@ -161,7 +224,8 @@ const submitHandler = async (e)=>{
                       <strong>Role</strong>
                       <strong className='float-end text-danger'>{currentUser.role}</strong>
                     </p>
-                  </div>
+                  </div>)
+                  }
                 </div>
             </div>
           </div>

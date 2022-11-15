@@ -14,6 +14,7 @@ import Login from './Auth/Login'
 import Pnf from './util/Pnf'
 import AdminDashboard from './Admin/AdminDashboard'
 import AdminProfile from './Admin/AdminProfile'
+import AllUsers from './Admin/AllUsers'
 import StudentDashboard from './Student/StudentDashboard'
 import StudentProfile from './Student/StudentProfile'
 import TrainerDashboard from './Trainer/TrainerDashboard'
@@ -53,6 +54,7 @@ function Main() {
                 <Route element={<ProtectedRoute/>}>
                     <Route path={`/admin/dashboard`} element={<AdminDashboard/>} />
                     <Route path={`/admin/profile`} element={<AdminProfile/>} />
+                    <Route path={`/admin/users`} element={<AllUsers/>} />
                 </Route>
               ) : null
             }
